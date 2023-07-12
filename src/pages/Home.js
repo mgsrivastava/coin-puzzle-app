@@ -1,5 +1,5 @@
 import "../styles.css";
-import finn from "../images/finn.jpg";
+import finn from "../images/finn.png";
 import React from "react";
 
 const HomePage = () => {
