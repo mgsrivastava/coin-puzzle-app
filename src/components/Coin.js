@@ -1,15 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-function Coin(props) {
-  let { coinType, action, isSelected } = props;
-  let coinClass = "empty-coin";
-  if (coinType === 1) {
-    coinClass = "silver-coin";
-  }
-  if (coinType === 2) {
-    coinClass = "gold-coin";
-  }
+const getCoinClass = (coinType) => {
+  if (coinType === 1) return "silver-coin";
+  if (coinType === 2) return "gold-coin";
+  return "empty-coin";
+};
+
+const Coin = ({ coinType, action, isSelected }) => {
+  const coinClass = getCoinClass(coinType);
   return (
     <motion.div
       className={coinClass}
@@ -19,11 +18,9 @@ function Coin(props) {
       transition={{
         duration: 0.2,
       }}
-      onClick={() => {
-        action();
-      }}
+      onClick={action}
     ></motion.div>
   );
-}
+};
 
 export default Coin;
