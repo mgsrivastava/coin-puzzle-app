@@ -4,15 +4,22 @@ import toast, { Toaster } from "react-hot-toast";
 import ArrowKeysReact from "arrow-keys-react";
 import Button from "../components/Button";
 import Coin from "../components/Coin";
+import {
+  COIN_SLOTS,
+  COIN_TYPES,
+  STARTING_ARRAYS,
+  WINNING_ARRAY_SEGS,
+} from "../constants";
+
+const areBothCoinsSelected = (coinA, coinB) => {
+  if (coinA === -1 || coinB === -1) {
+    return false;
+  }
+  return true;
+};
 
 export default function FiveCoinPuzzle() {
-  const numberOfCoinSlots = 17;
-  const startingArray = [0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 1, 0, 0, 0, 0, 0, 0];
-  // player wins if either of these segments are present at any point in the array
-  const winningArraySegments = [
-    [2, 2, 1, 1, 1],
-    [1, 1, 1, 2, 2],
-  ];
+  const startingArray = Array.from(STARTING_ARRAYS.FIVE_COIN);
   const [coinTypeArray, setCoinTypeArray] = useState(startingArray);
   const [firstSelectedCoin, setFirstSelectedCoin] = useState(-1);
   const [secondSelectedCoin, setSecondSelectedCoin] = useState(-1);
@@ -29,7 +36,7 @@ export default function FiveCoinPuzzle() {
   };
   const selectCoin = (coinNumber) => {
     // cannot select empty coins
-    if (coinTypeArray[coinNumber] !== 0) {
+    if (coinTypeArray[coinNumber] !== COIN_TYPES.EMPTY) {
       if (firstSelectedCoin === -1) {
         setFirstSelectedCoin(coinNumber);
         setcoinSelectText("Click to select second coin");
@@ -47,14 +54,9 @@ export default function FiveCoinPuzzle() {
       } else return;
     }
   };
-  const areTwoCoinsSelected = () => {
-    if (firstSelectedCoin === -1 || secondSelectedCoin === -1) {
-      return false;
-    }
-    return true;
-  };
+
   const handleMoveLeft = () => {
-    if (areTwoCoinsSelected() === false) {
+    if (areBothCoinsSelected(firstSelectedCoin, secondSelectedCoin) === false) {
       toast.error("must select two coins to move", {
         position: "bottom-center",
       });
@@ -81,7 +83,7 @@ export default function FiveCoinPuzzle() {
     }
   };
   const handleMoveRight = () => {
-    if (areTwoCoinsSelected() === false) {
+    if (areBothCoinsSelected(firstSelectedCoin, secondSelectedCoin) === false) {
       return;
     }
     // determine the relative positions of the coins
@@ -111,11 +113,10 @@ export default function FiveCoinPuzzle() {
   };
   const checkCompletion = () => {
     const arrayString = coinTypeArray.join(",");
-    const winningStringOne = winningArraySegments[0].join(",");
-    const winningStringTwo = winningArraySegments[1].join(",");
+    const winningStrings = WINNING_ARRAY_SEGS.FIVE_COIN;
     if (
-      arrayString.includes(winningStringOne) ||
-      arrayString.includes(winningStringTwo)
+      arrayString.includes(winningStrings[0].join(",")) ||
+      arrayString.includes(winningStrings[1].join(","))
     ) {
       toast.success("Congrats! You've completed the puzzle");
     }
@@ -176,11 +177,12 @@ export default function FiveCoinPuzzle() {
         <p>{coinSelectText}</p>
       </div>
       <div className="coin-array" tabIndex="1">
-        {[...Array(numberOfCoinSlots).keys()].map((key) => (
+        {[...Array(COIN_SLOTS.FIVE_COIN).keys()].map((key) => (
           <Coin
             coinType={coinTypeArray[key]}
             action={() => selectCoin(key)}
             id={key}
+            key={key}
             isSelected={
               key === firstSelectedCoin || key === secondSelectedCoin
                 ? true
