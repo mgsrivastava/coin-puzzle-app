@@ -1,7 +1,7 @@
 // paths.js
 
 export const PATHS = {
-  HOME: "/",
-  FIVE_COIN: "/fivecoin",
-  SIX_COIN: "/sixcoin",
+  HOME: "/coin-puzzle-app/",
+  FIVE_COIN: "/coin-puzzle-app/fivecoin",
+  SIX_COIN: "/coin-puzzle-app/sixcoin",
 };
