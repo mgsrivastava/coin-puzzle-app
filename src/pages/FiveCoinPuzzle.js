@@ -1,5 +1,5 @@
 import "../styles.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import ArrowKeysReact from "arrow-keys-react";
 import Button from "../components/Button";
@@ -24,9 +24,7 @@ export default function FiveCoinPuzzle() {
   const [firstSelectedCoin, setFirstSelectedCoin] = useState(-1);
   const [secondSelectedCoin, setSecondSelectedCoin] = useState(-1);
   const [moveCounter, setMoveCounter] = useState(0);
-  const [coinSelectText, setcoinSelectText] = useState(
-    "Click to select first coin"
-  );
+  const [status, setStatus] = useState("Idle");
 
   const swapCoins = (array, index1, index2) => {
     [array[index1], array[index2]] = [array[index2], array[index1]];
@@ -34,12 +32,30 @@ export default function FiveCoinPuzzle() {
     selectCoin(index2);
     checkCompletion(array);
   };
+
+  // useCallback declares a dependency on status
+  // This ensures that if status changes, this function will always have the latest
+  // status value when it evaluates.
+  // If we did not do this, then we could end up with a stale status value inside
+  // of the function due to the way JavaScript closures work.
+  const getCoinText = useCallback(() => {
+    switch (status) {
+      case "Idle":
+        return "Click to select a coin";
+      case "oneSelected":
+        return "Click to select second coin";
+      case "twoSelected":
+        return `Use arrow keys to move coins
+        ESC to deselect coins`;
+    }
+  }, [status]);
+
   const selectCoin = (coinNumber) => {
     // cannot select empty coins
     if (coinTypeArray[coinNumber] !== COIN_TYPES.EMPTY) {
       if (firstSelectedCoin === -1) {
         setFirstSelectedCoin(coinNumber);
-        setcoinSelectText("Click to select second coin");
+        setStatus("oneSelected");
       } else if (
         secondSelectedCoin === -1 &&
         (coinNumber === firstSelectedCoin - 1 ||
@@ -47,10 +63,7 @@ export default function FiveCoinPuzzle() {
         coinTypeArray[coinNumber] !== coinTypeArray[firstSelectedCoin]
       ) {
         setSecondSelectedCoin(coinNumber);
-        setcoinSelectText(
-          `Use arrow keys to move coins
-          ESC to deselect coins`
-        );
+        setStatus("twoSelected");
       } else return;
     }
   };
@@ -84,6 +97,9 @@ export default function FiveCoinPuzzle() {
   };
   const handleMoveRight = () => {
     if (areBothCoinsSelected(firstSelectedCoin, secondSelectedCoin) === false) {
+      toast.error("must select two coins to move", {
+        position: "bottom-center",
+      });
       return;
     }
     // determine the relative positions of the coins
@@ -125,7 +141,7 @@ export default function FiveCoinPuzzle() {
     setFirstSelectedCoin(-1);
     setSecondSelectedCoin(-1);
     setMoveCounter(moveCounter + 1);
-    setcoinSelectText("Select first coin");
+    setStatus("Idle");
   };
   const resetPuzzle = () => {
     setCoinTypeArray(startingArray);
@@ -174,7 +190,7 @@ export default function FiveCoinPuzzle() {
         movement<br></br>
       </div>
       <div className="coin-select-text">
-        <p>{coinSelectText}</p>
+        <p>{getCoinText()}</p>
       </div>
       <div className="coin-array" tabIndex="1">
         {[...Array(COIN_SLOTS.FIVE_COIN).keys()].map((key) => (
