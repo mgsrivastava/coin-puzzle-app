@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/coin-puzzle-app/static/css/main.aa075d60.css",
-    "main.js": "/coin-puzzle-app/static/js/main.bfeb2ead.js",
+    "main.js": "/coin-puzzle-app/static/js/main.9eb7eb91.js",
     "static/media/finn.png": "/coin-puzzle-app/static/media/finn.4f400878b573ded04091.png",
     "index.html": "/coin-puzzle-app/index.html",
     "main.aa075d60.css.map": "/coin-puzzle-app/static/css/main.aa075d60.css.map",
-    "main.bfeb2ead.js.map": "/coin-puzzle-app/static/js/main.bfeb2ead.js.map"
+    "main.9eb7eb91.js.map": "/coin-puzzle-app/static/js/main.9eb7eb91.js.map"
   },
   "entrypoints": [
     "static/css/main.aa075d60.css",
-    "static/js/main.bfeb2ead.js"
+    "static/js/main.9eb7eb91.js"
   ]
 }
