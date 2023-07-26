@@ -30,7 +30,6 @@ export default function FiveCoinPuzzle() {
     [array[index1], array[index2]] = [array[index2], array[index1]];
     setCoinTypeArray(array);
     selectCoin(index2);
-    checkCompletion(array);
   };
 
   // useCallback declares a dependency on status
@@ -94,6 +93,7 @@ export default function FiveCoinPuzzle() {
         position: "bottom-center",
       });
     }
+    checkCompletion(coinTypeArray);
   };
   const handleMoveRight = () => {
     if (areBothCoinsSelected(firstSelectedCoin, secondSelectedCoin) === false) {
@@ -126,13 +126,14 @@ export default function FiveCoinPuzzle() {
         position: "bottom-center",
       });
     }
+    checkCompletion(coinTypeArray);
   };
   const checkCompletion = () => {
-    const arrayString = coinTypeArray.join(",");
+    const arrayString = coinTypeArray.join("");
     const winningStrings = WINNING_ARRAY_SEGS.FIVE_COIN;
     if (
-      arrayString.includes(winningStrings[0].join(",")) ||
-      arrayString.includes(winningStrings[1].join(","))
+      arrayString.includes(winningStrings[0].join("")) ||
+      arrayString.includes(winningStrings[1].join(""))
     ) {
       toast.success("Congrats! You've completed the puzzle");
     }
